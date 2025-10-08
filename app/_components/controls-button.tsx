@@ -1,26 +1,48 @@
 "use client";
 
-import { Button } from '../../components/ui/button';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+
 import { Modification } from './modification';
 
 import { usePlaying } from '@/store/use-running';
-import { socket } from '@/lib/socket';
+import { usePlayerColor } from '@/store/use-player-color';
+
+import { initSocket, disconnectSocket } from '@/lib/socket';
+import { SOCKET_EVENTS } from '@/lib/events';
 
 import Link from 'next/link';
+
+import { useEffect } from 'react';
 
 export const ControlsButton = () => {
 
   const setIsPlaying = usePlaying((state) => state.setIsPlaying);
+  const setPlayerColor = usePlayerColor(s => s.setPlayerColor);
 
   const handleNewGame = () => {
-    socket.emit("findMatch");
-    socket.on("waiting", (msg) => {
-      console.log(msg);
+    const socket = initSocket();
+
+    socket.emit(SOCKET_EVENTS.FIND_MATCH);
+        
+    socket.on(SOCKET_EVENTS.WAITING, () => {
+      toast("waiting for player to join...");
     });
-    
-    socket.on("gameStarted", () => setIsPlaying(true));
+
+    socket.on(SOCKET_EVENTS.GAME_STARTED, (data) => {
+      const myColor = data.colors[socket.id!];
+      setPlayerColor(myColor);
+
+      toast("Match Started");
+      setIsPlaying(true);
+    });
   };
   
+  useEffect(() => {
+    return () => {
+      disconnectSocket();
+    };
+  }, []);
 
   return (
     <div className=' flex flex-col h-full items-center lg:w-[270px] justify-start py-3 px-4 gap-y-2 rounded border lg:border-0 border-white/15'>

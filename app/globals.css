@@ -134,3 +134,11 @@
   0%, 100% { transform: scale(1); opacity: 0.6; }
   50%      { transform: scale(1.3); opacity: 0; }
 }
+
+.flip {
+  transform: rotate(180deg);
+}
+
+.flip > div {
+  transform: rotate(180deg); /* flips each square back so pieces stay upright */
+}

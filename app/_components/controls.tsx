@@ -11,7 +11,7 @@ type Props = {
 export const Controls = ({ className }: Props) => {
   return (
     <div className={cn(
-      "max-w-[650px] lg:w-[300px] max-h-full bg-neutral-900 ",
+      "max-w-[650px] lg:w-[300px] max-h-full bg-white dark:bg-neutral-800/40 border dark:border-white/30 shadow-lg border-neutral-300 rounded-md",
       className
     )}>
       <div className='hidden lg:block w-[270px] px-3 py-2 my-2 max-h-full border-white/50 border-b rounded relative'>

@@ -34,7 +34,7 @@ export const Square = ({ cell, row, col, highlightedMoves, selectedSquare, onCli
           width={70}
           src={getPiece(cell.type, cell.color, theme)}
           alt={`${cell.type} ${cell.color}`}
-          className=" aspect-square pointer-events-none select-none z-50"
+          className=" aspect-square pointer-events-none select-none z-40"
         />
       )}
 

@@ -17,7 +17,7 @@ export const Moves = () => {
       </div>
 
       {/* Scrollable area */}
-      <ScrollArea className="w-full h-80 rounded-md border">
+      <ScrollArea className="w-full h-80 rounded-md border border-white/30">
         <div className="grid grid-cols-2 ml-10 text-start w-full text-sm p-2 gap-y-1">
           {moveHistory.map((move, i) => (
             <React.Fragment key={i}>

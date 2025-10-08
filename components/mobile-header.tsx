@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export const MobileHeader = () => {
   return (
-    <nav className="xl:hidden px-6 h-[50px] flex items-center bg-neutral-800 border-b fixed top-0 w-full z-50">
+    <nav className="xl:hidden px-6 h-[50px] flex items-center dark:bg-neutral-950 border-b fixed top-0 w-full z-50">
       <MobileSidebar />
       <div className="left-1/2 absolute -translate-x-1/2 flex items-center gap-x-3">
         <Image src="/logo.svg" height={30} width={30} alt="Mascot" />

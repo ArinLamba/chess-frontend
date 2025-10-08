@@ -1,6 +1,5 @@
 import { Controls } from "@/app/_components/controls";
 import { MobileHeader } from "@/components/mobile-header";
-// import { Modification } from "@/components/modification";
 import { Sidebar } from "@/components/sidebar";
 
 
@@ -10,10 +9,10 @@ type Props = {
 
 const MainLayout = ({ children }: Props) => {
   return (
-    <div>
+    <div className="min-h-screen  ">
       <MobileHeader />
       <Sidebar className="hidden xl:flex" />
-      <main className="xl:pl-[256px] flex gap-x-3 h-full pt-[30px] xl:pt-0 relative bg-[#242424]">
+      <main className="xl:pl-[256px] flex gap-x-3 pt-[30px] xl:pt-0 relative bg-slate-100  dark:bg-zinc-900/70">
         {/* children + controls in a flex row */}
         <div className="flex lg:max-w-[950px] w-full mx-auto">
           {/* main content */}

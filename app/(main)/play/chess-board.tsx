@@ -9,23 +9,26 @@ import { usePlaying } from "@/store/use-running";
 import { useHighlightedMoves } from "@/store/use-highlighted-moves";
 import { useSelectedSquare } from "@/store/use-selected-square";
 
-import { socket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket";
 
 import { Game } from "@/chess/game";
 
 // import { useGame } from "@/store/use-game";
 import { generateBoard } from "@/chess/helpers/board-helper";
 import { useGameHistory } from "@/store/use-history";
-
+import { SOCKET_EVENTS } from "@/lib/events";
+import { usePlayerColor } from "@/store/use-player-color";
 
 export const ChessBoard = () => {
   const isPlaying = usePlaying(state => state.isPlaying);
   const highlightedMoves = useHighlightedMoves(state => state.highlightedMoves);
   const selectedSquare = useSelectedSquare(state => state.selectedSquare);
   const  addMove  = useGameHistory(state => state.addMove);
+  const playerColor = usePlayerColor(state => state.playerColor);
 
   const [game, setGame] = useState<Game>(new Game(generateBoard(), "white"));
 
+  const socket = getSocket();
   
   const handleClick = (row: number, col: number) => {
     if (!isPlaying) return; // TODO: later: connect socket after click
@@ -33,34 +36,37 @@ export const ChessBoard = () => {
   };
 
   useEffect(() => {
-    
-    socket.on("opponentMove", (move) => {
+    if(!socket) return;
+
+    socket.on(SOCKET_EVENTS.OPPONENT_MOVE, (move) => {
       const [from, to, moveInfo] = move;
       
       setGame((prevGame) => {
         const clonedBoard = prevGame.cloneBoard();
         const newGame = new Game(clonedBoard, prevGame.turn);
-        newGame.makeMove(from , to);
+        newGame.makeMove(from, to);
         return newGame
       });
       addMove(moveInfo);
     });
 
-    socket.on("gameOver", () => {
+    socket.on(SOCKET_EVENTS.GAME_OVER, () => {
+      // TODO: ADD A MODAL TO RESTART
       alert("Game Over");
     })
+
     
     return () => {
       socket.off("opponentMove");
     }
-  }, [addMove]);
+  }, [addMove,socket]);
   
   return (
     <div className="" onContextMenu={(e) => e.preventDefault()}>
       <div className='h-12 bg-neutral-800 border border-white/15 rounded'>
         Opponent Component
       </div>
-      <div>
+      <div className={playerColor === "black" ? "flip" : ""}>
         {game.board.map((row, i) => 
           <div key={i} className="grid" style={{ gridTemplateColumns: `repeat(${row.length}, minmax(0, 1fr))` }}>
             {row.map((cell, j) => (
