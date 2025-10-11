@@ -9,6 +9,8 @@ import { useGameHistory } from "@/store/use-history";
 import { toast } from "sonner";
 import { GameEngine } from "../game-engine";
 import { Position } from "@/lib/types";
+import { useBotDepth } from "@/store/use-depth";
+import { usePlaying } from "@/store/use-playing";
 
 
 type HanldeMoveProps = {
@@ -80,6 +82,8 @@ export const handleMove = ({
     clearHighlightedMoves();
   }
 };
+
+
 type HandleBotProps = {
   from: Position;
   to: Position;
@@ -93,33 +97,43 @@ const handleBotMove = ({
   setGame,
 }: HandleBotProps) => {
   const addMove = useGameHistory.getState().addMove;
+  const botDepth = useBotDepth.getState().botDepth;
+  const setIsPlaying = usePlaying.getState().setIsPlaying;
+
   const clonedBoard = game.cloneBoard();
   const newGame = new Game(clonedBoard, game.turn);
   const moveInfo = newGame.makeMove(from, to);
   addMove(moveInfo!);
 
-  const checkmate = newGame.detectCheckMate();
-  if(checkmate) toast(`Check mate ${game.turn} wins`);
+  let checkmate = newGame.detectCheckMate();
+  if(checkmate) {
+    toast(`Check mate ${game.turn} wins`);
+    setIsPlaying(false);
+  }
 
   setGame(newGame);
 
   // here send the moves to the game engine it will make the move on its board and then we just update it one more time on our board
   // --- Bot turn ---
-  const engine = new GameEngine(newGame);
+  const engine = new GameEngine(newGame, botDepth);
   const bestMove = engine.getBestMove();
+  console.log(botDepth);
 
-  if (bestMove) {
-    const [from, to] = bestMove;
-    const cloned = newGame.cloneBoard();
-    const botGame = new Game(cloned, newGame.turn);
-    const botMoveInfo = botGame.makeMove(from, to);
-    
-    const checkmate = botGame.detectCheckMate();
-    if (checkmate) toast(`Check mate ${botGame.turn} wins`);
-    
-    setTimeout(() => {
-      setGame(botGame)
-      addMove(botMoveInfo!);
-    }, 600); // small delay for realism
+  if (!bestMove) return;
+  const [botFrom, botTo] = bestMove;
+  const cloned = newGame.cloneBoard();
+  const botGame = new Game(cloned, newGame.turn);
+  const botMoveInfo = botGame.makeMove(botFrom, botTo);
+  
+  checkmate = botGame.detectCheckMate();
+  if (checkmate) {
+    toast(`Check mate ${botGame.turn} wins`);
+    setIsPlaying(false);
   }
+  
+  setTimeout(() => {
+    setGame(botGame)
+    addMove(botMoveInfo!);
+  }, 600); // small delay for realism
+  
 }

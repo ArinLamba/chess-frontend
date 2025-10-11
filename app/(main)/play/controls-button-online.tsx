@@ -3,8 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-import { Modification } from '@/app/_components/modification';
-
 
 import { usePlaying } from '@/store/use-playing';
 import { usePlayerColor } from '@/store/use-player-color';
@@ -15,6 +13,7 @@ import { SOCKET_EVENTS } from '@/lib/events';
 import Link from 'next/link';
 
 import { useEffect } from 'react';
+import { ResignButton } from '@/app/_components/resign-button';
 
 export const ControlsButtonOnline = () => {
 
@@ -46,12 +45,12 @@ export const ControlsButtonOnline = () => {
   }, []);
 
   return (
-    <div className=' flex flex-col h-full items-center lg:w-[270px] justify-stat py-3 px-4 gap-y-2 rounded border lg:border-0'>
-      <div className='flex h-full lg:flex-col lg:items items-center justify-center w-full gap-2'>
+    <div className=' flex flex-col h-full items-center lg:w-[270px] justify-start py-3 px-4 gap-y-2 rounded'>
+      <div className='flex h-full lg:flex-col items-center justify-center w-full gap-2'>
         <Button 
           variant="main" 
           size={"lg"} 
-          className="lg:text-md lg:w-full tracking-wide uppercase cursor-pointer"
+          className="lg:text-md lg:w-full uppercase cursor-pointer"
           onClick={handleNewGame}
           disabled={isPlaying}
           >
@@ -61,7 +60,7 @@ export const ControlsButtonOnline = () => {
           <Button 
             size={"lg"} 
             variant="superOutline"
-            className="lg:text-md lg:w-[240px] tracking-wide cursor-pointer "
+            className="lg:text-md lg:w-[240px] cursor-pointer "
             >
             Play Against Bot
           </Button>
@@ -70,15 +69,13 @@ export const ControlsButtonOnline = () => {
           <Button 
             variant="superOutline"
             size={"lg"} 
-            className="lg:text-md lg:w-[240px] tracking-wide cursor-pointer"
+            className="lg:text-md lg:w-[240px]  cursor-pointer"
             >
             Analyze
           </Button>
         </Link>
       </div>
-      <div className='w-full'>
-        <Modification />
-      </div>
+      <ResignButton />
     </div>
   );
 };

@@ -1,8 +1,8 @@
 "use client";
 
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { useGameHistory } from '@/store/use-history';
-import React from 'react';
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useGameHistory } from "@/store/use-history";
+
 
 export const Moves = () => {
   const moveHistory = useGameHistory(state => state.moveHistory);
@@ -19,7 +19,7 @@ export const Moves = () => {
       <ScrollArea className="w-full h-80 rounded-md  bg-[var(--bg-light)] ">
         <div className="grid grid-cols-2 ml-10 text-start w-full text-sm p-2 gap-y-1">
           {moveHistory.map((move, i) => (        
-            <div key={i}>
+            <div key={i} className="font-bold text-white text-shadow-lg">
               {move} 
             </div>         
           ))}

@@ -12,7 +12,7 @@ export const ResignButton = () => {
 
   const [resignTrigger, setResignTrigger] = useState(false);
   
-  const { isPlaying, setIsPlaying} = usePlaying();
+  const { isPlaying, setIsPlaying } = usePlaying();
   const clearHighlightedMoves = useHighlightedMoves(state => state.clearHighlightedMoves);
   const clearSelectedSquare  = useSelectedSquare(state => state.clearSelectedSquare); 
   const resetTurn = useTurnStore(state => state.resetTurn);

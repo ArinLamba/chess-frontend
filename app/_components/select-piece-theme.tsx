@@ -1,3 +1,4 @@
+"use client";
 import { BrushCleaning } from "lucide-react";
 import { ActionTooltip } from "../../components/action-tooltip";
 
