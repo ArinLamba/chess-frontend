@@ -1,17 +1,19 @@
 import React from 'react'
-import { ChessBoard } from './chess-board';
+import { ChessBoardOnline } from './chess-board-online';
 import { Controls } from '@/app/_components/controls';
+import { ControlsButtonOnline } from '@/app/(main)/play/controls-button-online';
 
 const PlayOnline = () => {
   return (
-    <div className='flex flex-col items-center gap-y-2'>
-      <div className='flex justify-center '>
-        <ChessBoard />
-      </div>
-      <div className=''>
-        <Controls className='lg:hidden block'/> 
-      </div>
+
+    <div className='flex lg:flex-row flex-col justify-center gap-5'>
+      <ChessBoardOnline />
+      <Controls>
+        <ControlsButtonOnline />
+      </Controls> 
     </div>
+     
+    
   );
 };
 

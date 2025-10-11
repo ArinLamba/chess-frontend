@@ -2,7 +2,7 @@ import { Flag } from "lucide-react";
 
 import { useEffect, useState } from "react";
 
-import { usePlaying } from "@/store/use-running";
+import { usePlaying } from "@/store/use-playing";
 import { useHighlightedMoves } from "@/store/use-highlighted-moves";
 import { useSelectedSquare } from "@/store/use-selected-square";
 import { useTurnStore } from "@/store/use-turn";

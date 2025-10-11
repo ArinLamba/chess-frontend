@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner"
-import { ThemeProvider } from "@/components/ui/theme-provider"
 
 const font = Inter({
   subsets: ["latin"]
@@ -14,7 +13,6 @@ export const metadata: Metadata = {
   title: "Chess App",
   description: "Chess App",
   icons: "/logo.svg"
-
 };
 
 export default function RootLayout({
@@ -27,15 +25,9 @@ export default function RootLayout({
       <body
         className={`${font.className} antialiased`}
       >
-        <ThemeProvider 
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        {children}
+        <Toaster />
+
       </body>
     </html>
   );

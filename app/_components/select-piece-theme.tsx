@@ -24,7 +24,7 @@ export const SelectPieceTheme = () => {
 
   return (
     <DropdownMenu>
-      <div className=" w-full flex items-center">
+      <div className=" w-full flex items-center ">
         <ActionTooltip label="Theme">
           <DropdownMenuTrigger 
             className="focus:outline-none text-muted-foreground hover:text-neutral-300 transition-colors cursor-pointer"

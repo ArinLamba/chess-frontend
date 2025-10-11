@@ -13,7 +13,7 @@ export default function Home() {
           &quot;Some games you&apos;re the artist, Some games you&apos;re the canvas&quot;
         </h1>
         <div className="flex flex-col items-center gap-y-3 max-w-[330px] w-full">
-          <Button variant="secondary" asChild className="w-full uppercase">
+          <Button variant="secondary" asChild className="w-full uppercase text-black">
             <Link href={"/play"}  className="w-full">
               Continue Playing
             </Link>

@@ -11,7 +11,7 @@ type HistoryState = {
   viewIndex: number;
   
   addMove: (move: MoveInfo) => void;
-  resetHistory: () => void;
+  clearHistory: () => void;
   goToMove: (index: number) => void; // for replaying a move
 };
 
@@ -33,6 +33,6 @@ export const useGameHistory = create<HistoryState>((set) => ({
 
   goToMove: (index) => set({ currentMoveIndex: index }),
 
-  resetHistory: () => set({ moveHistory: [], moveDetails: [], currentMoveIndex: -1 }),
+  clearHistory: () => set({ moveHistory: [], moveDetails: [], currentMoveIndex: -1 }),
 }));
 

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Square } from "./square";
 
 import { handleMove } from "@/chess/helpers/front-move-helper"
-import { usePlaying } from "@/store/use-running";
+import { usePlaying } from "@/store/use-playing";
 import { useHighlightedMoves } from "@/store/use-highlighted-moves";
 import { useSelectedSquare } from "@/store/use-selected-square";
 
@@ -19,7 +19,7 @@ import { useGameHistory } from "@/store/use-history";
 import { SOCKET_EVENTS } from "@/lib/events";
 import { usePlayerColor } from "@/store/use-player-color";
 
-export const ChessBoard = () => {
+export const ChessBoardOnline = () => {
   const isPlaying = usePlaying(state => state.isPlaying);
   const highlightedMoves = useHighlightedMoves(state => state.highlightedMoves);
   const selectedSquare = useSelectedSquare(state => state.selectedSquare);
@@ -32,7 +32,7 @@ export const ChessBoard = () => {
   
   const handleClick = (row: number, col: number) => {
     if (!isPlaying) return; // TODO: later: connect socket after click
-    handleMove({ row, col, game });
+    handleMove({ row, col, game, setGame, mode:"pvp" });
   };
 
   useEffect(() => {
@@ -90,4 +90,3 @@ export const ChessBoard = () => {
     </div>
   );
 }
-

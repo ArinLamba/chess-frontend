@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarItem } from "./sidebar-item";
-import { ModeToggle } from "./theme-toggle";
 
 type Props = {
   className?: string;
@@ -11,7 +10,7 @@ type Props = {
 
 export const Sidebar = ({ className }: Props) => {
   return (
-    <div className={cn("flex h-full md:w-[256px] md:fixed left-0 top-0 px-4 border-r-2 flex-col dark:bg-zinc-900 z-50",
+    <div className={cn("flex h-full md:w-[256px] md:fixed left-0 top-0 px-4 border-r flex-col bg-[var(--bg)] z-50",
     className,
     )}>
       <Link href="/play">
@@ -33,10 +32,6 @@ export const Sidebar = ({ className }: Props) => {
           href="/bot"
           iconSrc="/logo.svg" 
         />
-
-      </div>
-      <div className="p-4 z-50">
-        <ModeToggle />
       </div>
     </div>
   );

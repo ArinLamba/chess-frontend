@@ -200,16 +200,16 @@
 //     return inCheck && !hasMoves;
 //   }
 
-  // private hasLegalMoves(color: PieceColor): boolean {
-  //   for (let r = 0; r < 8; r++) {
-  //     for (let c = 0; c < 8; c++) {
-  //       const piece = this.board[r][c];
-  //       if (!piece || piece.color !== color) continue;
-  //       if (this.getLegalMoves(r, c).length > 0) return true;
-  //     }
-  //   }
-  //   return false;
-  // }
+//   private hasLegalMoves(color: PieceColor): boolean {
+//     for (let r = 0; r < 8; r++) {
+//       for (let c = 0; c < 8; c++) {
+//         const piece = this.board[r][c];
+//         if (!piece || piece.color !== color) continue;
+//         if (this.getLegalMoves(r, c).length > 0) return true;
+//       }
+//     }
+//     return false;
+//   }
 
 //   private isCheckmate(color: PieceColor): boolean {
 //     if (this.checkCache?.checkmate !== undefined) {
@@ -316,6 +316,7 @@ export class Game {
   turn: PieceColor;
   private lastMoveInfo: MoveInfo | null = null;
   private legalMovesCache: Map<string, Position[]> = new Map();
+  private moveHistory: MoveInfo[] = [];
 
 
   constructor(board: BoardType, turn: PieceColor = "white") {
@@ -330,7 +331,7 @@ export class Game {
   cloneBoard(): BoardType {
     return PieceFactory.cloneBoard(this.board);
   }
-
+  
   getLegalMoves(row: number, col: number): Position[] {
     const key = `${row}${col}${this.turn}`;
     if (this.legalMovesCache.has(key)) return this.legalMovesCache.get(key)!;
@@ -342,12 +343,79 @@ export class Game {
 
   makeMove(from: Position, to: Position) {
     this.legalMovesCache.clear();
-    this.lastMoveInfo = MoveHandler.moveMetadata(this, from, to);
+    // CheckHandler.attackMapCache = {};
+    
+    // Generate move metadata including captured piece, promotion info, etc.
+    const moveInfo = MoveHandler.moveMetadata(this, from, to);
+    if(!moveInfo) return;
+
+    this.moveHistory.push(moveInfo);       // push onto history stack
+    this.lastMoveInfo = moveInfo;
+    
     MoveHandler.movePieceOnBoard(this.board, from, to);
+    
+    //handle promotion (update the last move's promotedPiece)
+    if(moveInfo.isPromotion) {
+      const promoted = this.board[to[0]][to[1]];
+      moveInfo.promotedPiece = promoted!;
+    }
+    
     this.turn = this.turn === "white" ? "black" : "white";
+    return moveInfo;
+    
   }
 
   detectCheckMate() {
     return CheckHandler.isCheckmate(this, this.turn);
   }
+
+  undoMove() {
+    this.legalMovesCache.clear();
+    // CheckHandler.attackMapCache = {};
+    
+    const moveInfo = this.moveHistory.pop();
+    if (!moveInfo) return;
+
+    const [fr, fc] = moveInfo.from;
+    const [tr, tc] = moveInfo.to;
+
+    // Restore moved piece to original square
+    const piece = this.board[tr][tc];
+    if (!piece) return;
+
+    // Undo promotion
+    if (moveInfo.isPromotion && moveInfo.promotedPiece) {
+      this.board[fr][fc] = moveInfo.promotedPiece;
+    } else {
+      this.board[fr][fc] = piece;
+    }
+
+    this.board[fr][fc]!.hasMoved = moveInfo.prevHasMoved;
+
+    // Restore captured piece if any
+    if (moveInfo.captured && moveInfo.capturedPiece) {
+      this.board[tr][tc] = moveInfo.capturedPiece;
+    } else {
+      this.board[tr][tc] = null;
+    }
+
+    // Undo castling
+    if (moveInfo.isCastling) {
+      const row = fr;
+      const isKingSide = moveInfo.isCastling === "kingside";
+      const rookFromCol = isKingSide ? 7 : 0;
+      const rookToCol = isKingSide ? 5 : 3;
+
+      const rook = this.board[row][rookToCol];
+      if (rook) {
+        this.board[row][rookFromCol] = rook;
+        this.board[row][rookToCol] = null;
+        rook.hasMoved = false;
+      }
+    }
+
+    // Switch turn back
+    this.turn = this.turn === "white" ? "black" : "white";
+  }
+
 }

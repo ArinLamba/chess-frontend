@@ -4,11 +4,11 @@ import { SelectPieceTheme } from "./select-piece-theme";
 
 export const Modification = () => {
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <div>
         <ResignButton />
       </div>
-      <div className="mt-3 pt-4 border-t border-t-white/50">
+      <div className="mt-3 pt-4">
         <SelectPieceTheme />
       </div>
     </div>

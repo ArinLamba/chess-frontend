@@ -1,4 +1,4 @@
-import { Controls } from "@/app/_components/controls";
+
 import { MobileHeader } from "@/components/mobile-header";
 import { Sidebar } from "@/components/sidebar";
 
@@ -9,19 +9,15 @@ type Props = {
 
 const MainLayout = ({ children }: Props) => {
   return (
-    <div className="min-h-screen  ">
+    <div className="min-h-screen">
       <MobileHeader />
       <Sidebar className="hidden xl:flex" />
-      <main className="xl:pl-[256px] flex gap-x-3 pt-[30px] xl:pt-0 relative bg-slate-100  dark:bg-zinc-900/70">
+      <main className="xl:pl-[256px] flex gap-x-3 pt-[30px] xl:pt-0 relative">
         {/* children + controls in a flex row */}
         <div className="flex lg:max-w-[950px] w-full mx-auto">
           {/* main content */}
-          <div className=" w-full pt-6 lg:mx-auto h-full">
+          <div className="mx-auto pt-6 lg:mx-auto h-full">
             {children}
-          </div>
-          {/* controls stick to right of children */}
-          <div className="pt-[24px] ml-6 hidden lg:block lg:mr-auto">
-            <Controls className="flex flex-col items-center py-2"/>
           </div>
         </div>
       </main>

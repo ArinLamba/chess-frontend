@@ -18,7 +18,7 @@ export const Square = ({ cell, row, col, highlightedMoves, selectedSquare, onCli
   const theme = useTheme(state => state.theme);
   const sum = row + col;
 
-  let className = "xl:h-20 xl:w-20 lg:h-19 lg:w-19 md:h-16 md:w-16 h-14 w-14 hover:border-2 border-amber-50 aspect-square text-neutral-800 flex items-center justify-center relative";
+  let className = "xl:h-20 xl:w-20 lg:h-19 lg:w-19 md:h-16 md:w-16 h-14 w-14 hover:border-2 transition-colors border-white aspect-square flex items-center justify-center relative";
   if (sum % 2 !== 0) className += " bg-[#AD6C4C]";
   else className += " bg-[#E6D6D3]";
 
@@ -30,11 +30,11 @@ export const Square = ({ cell, row, col, highlightedMoves, selectedSquare, onCli
       {/* piece */}
       {cell && (
         <Image
-          height={70}
-          width={70}
+          height={74}
+          width={74}
           src={getPiece(cell.type, cell.color, theme)}
           alt={`${cell.type} ${cell.color}`}
-          className=" aspect-square pointer-events-none select-none z-40"
+          className=" aspect-square pointer-events-none select-none z-40 "
         />
       )}
 
@@ -42,6 +42,7 @@ export const Square = ({ cell, row, col, highlightedMoves, selectedSquare, onCli
       {isCapture && (
         <div className="absolute inset-0  bg-red-400/40 pointer-events-none "></div>
       )}
+      
       {/* legal move dot on empty squares */}
       {isMove && !isCapture && (
         <div className=" absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -52,7 +53,7 @@ export const Square = ({ cell, row, col, highlightedMoves, selectedSquare, onCli
 
       {/* selected piece highlight */}
       {selectedSquare && selectedSquare[0] === row && selectedSquare[1] === col && (
-        <div className="absolute inset-0 border-4 bg-yellow-400/40  pointer-events-none"></div>
+        <div className="absolute inset-0 bg-yellow-400/40  pointer-events-none"></div>
       )}
     </div>
   );
