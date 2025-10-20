@@ -2,9 +2,15 @@ import { Game } from "./game";
 import type { Position } from "@/lib/types";
 import { evaluateBoard } from "./evalution";
 
+
+type TTEntry = {
+  depth: number;
+  score: number;
+};
 export class GameEngine {
   private game: Game;
   private depth: number;
+  private transpositionTable: Map<string, TTEntry> = new Map(); // ✅ TT cache
 
   constructor(initialGame: Game, depth: number = 4) {
     // clone the initial game so engine can modify safely
@@ -14,6 +20,19 @@ export class GameEngine {
 
   setDepth(depth: number) {
     this.depth = depth;
+  }
+
+  /** ✅ Generate a unique key for this position */
+  private getPositionKey(): string {
+    let key = "";
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const piece = this.game.board[r][c];
+        key += piece ? `${piece.type}${piece.color[0]}` : ".";
+      }
+    }
+    key += this.game.turn;
+    return key;
   }
 
   /** Get best move using simple minimax (placeholder for now) */
@@ -46,13 +65,35 @@ export class GameEngine {
   }
 
   private negamax(depth: number, alpha: number, beta: number): number {
-    if (depth === 0) {
-      return evaluateBoard(this.game.board, this.game.turn);
+    const key = this.getPositionKey();
+    
+    // check if this position is cached
+    const cached = this.transpositionTable.get(key);
+    if(cached && cached.depth >= depth) {
+      return cached.score;
     }
 
-    const moves = this.getAllLegalMoves();
-    if (moves.length === 0) return evaluateBoard(this.game.board, this.game.turn);
+    // best case or terminal
+    if (depth === 0) {
+      const evalScore = evaluateBoard(this.game.board, this.game.turn);
+      this.transpositionTable.set(key, { depth, score: evalScore });
+      return evalScore;
+    }
 
+    if(this.game.detectCheckMate()) {
+      const mateScore = -9999 + (this.depth - depth);
+      this.transpositionTable.set(key, { depth, score: mateScore });
+      return mateScore;
+    }
+    
+    const moves = this.getAllLegalMoves();
+    if (moves.length === 0) {
+      const evalScore = evaluateBoard(this.game.board, this.game.turn);
+      this.transpositionTable.set(key, { depth, score: evalScore });
+      return evalScore;
+    }
+
+    // normal negamax search
     let maxEval = -Infinity;
 
     for (const [from, to] of moves) {
@@ -67,44 +108,11 @@ export class GameEngine {
       if (alpha >= beta) break;
     }
 
+    // store result
+    this.transpositionTable.set(key, { depth, score: maxEval });
     return maxEval;
   }
 
-  /** Basic minimax with alpha-beta pruning */
-  private minimax(depth: number, alpha: number, beta: number, isMaximizing: boolean): number {
-    if (depth === 0) {
-      return evaluateBoard(this.game.board, this.game.turn);
-    }
-
-    const moves = this.getAllLegalMoves();
-    if (moves.length === 0) return evaluateBoard(this.game.board, this.game.turn);
-
-    if (isMaximizing) {
-      let maxEval = -Infinity;
-      for (const [from, to] of moves) {
-        const moveInfo = this.game.makeMove(from, to);
-        if(!moveInfo) continue;
-        const evalScore = -this.minimax(depth - 1, -beta, -alpha, false);
-        this.game.undoMove();
-        maxEval = Math.max(maxEval, evalScore);
-        alpha = Math.max(alpha, evalScore);
-        if (beta <= alpha) break;
-      }
-      return maxEval;
-    } else {
-      let minEval = Infinity;
-      for (const [from, to] of moves) {
-        const moveInfo = this.game.makeMove(from, to);
-        if(!moveInfo) continue;
-        const evalScore = -this.minimax(depth - 1, -beta, -alpha, true);
-        this.game.undoMove();
-        minEval = Math.min(minEval, evalScore);
-        beta = Math.min(beta, evalScore);
-        if (beta <= alpha) break;
-      }
-      return minEval;
-    }
-  }
 
   /** Return all legal moves for current turn */
   private getAllLegalMoves(): [Position, Position][] {

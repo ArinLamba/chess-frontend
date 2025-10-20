@@ -9,6 +9,8 @@ import { useReset } from '@/store/use-reset';
 import { useGameHistory } from '@/store/use-history';
 import { BotDifficulty } from './bot-difficulty';
 import { ResignButton } from '@/app/_components/resign-button';
+import { useGame } from '@/store/use-game';
+import { useTurnStore } from '@/store/use-turn';
 
 
 export const ControlsButtonBot = () => {
@@ -17,11 +19,15 @@ export const ControlsButtonBot = () => {
 
   const setResetTrigger  = useReset(state => state.setResetTrigger);
   const clearHistory = useGameHistory(state => state.clearHistory);
+  const resetTurn = useTurnStore(state => state.resetTurn);
+  const resetGame = useGame(state => state.resetGame);
 
   const handleNewGame = () => {
     setResetTrigger();
     clearHistory();
     setIsPlaying(true);
+    resetTurn();
+    resetGame();
   };
   
 

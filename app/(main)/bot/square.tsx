@@ -26,7 +26,7 @@ export const Square = ({ row, col, highlightedMoves, selectedSquare, onClick }: 
 
   return (
     <div className={`${className} group`} onClick={onClick}>
-      {row}{col}
+      
       {/* legal move dot on empty squares */}
       {isMove  && (
         <div className=" absolute inset-0 flex items-center justify-center pointer-events-none">

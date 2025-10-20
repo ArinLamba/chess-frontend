@@ -10,7 +10,7 @@ export const useBotDepth = create<BotDepthState>((set) => ({
   depth: 1,    // default depth 1
   botDepth: 1,
   setDepth: (val) => {
-    const depth = Math.min(Math.max(val, 1), 4); // clamp between 1-4
+    const depth = Math.min(Math.max(val, 1), 5); // clamp between 1-4
     set({ depth, botDepth: depth });
   },
 }));

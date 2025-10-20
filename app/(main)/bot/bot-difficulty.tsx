@@ -10,7 +10,7 @@ export const BotDifficulty = () => {
       <Slider 
           value={[depth]}
           min={1}
-          max={4}
+          max={5}
           step={1}
           onValueChange={(val) => setDepth(val[0])}
           className=''
@@ -20,6 +20,7 @@ export const BotDifficulty = () => {
           <span className={depth === 2 ? 'text-yellow-300' : ''}> Medium</span>
           <span className={depth === 3 ? 'text-orange-400' : ''}> Hard</span>
           <span className={depth === 4 ? 'text-red-700' : ''}>    Expert</span>
+          <span className={depth === 5 ? 'text-red-700' : ''}>    Torch</span>
         </div>
     </div>
   );
