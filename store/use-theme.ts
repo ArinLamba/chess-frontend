@@ -7,6 +7,6 @@ type UseThemeState = {
 }
 
 export const useTheme = create<UseThemeState>((set) => ({
-  theme: "neo",
+  theme: "classic",
   setTheme: (theme: Theme) => set({theme : theme}),
 }));

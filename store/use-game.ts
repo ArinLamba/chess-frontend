@@ -4,13 +4,13 @@ import { create } from "zustand";
 
 type GameState = {
   game: Game;
-  setGame: (game: Game | ((prevGame: Game) => Game)) => void;
+  setGame: (game: Game) => void;
+  resetGame: () => void;
 }
 
 export const useGame = create<GameState>((set) => ({
   game: new Game(generateBoard(), "white"),
 
-  setGame: (updater) => set((state) => ({
-    game: typeof updater === "function" ? updater(state.game) : updater
-  }))
+  setGame: (game) => set({ game : game}),
+  resetGame: () => set({ game: new Game(generateBoard(), "white")}),
 }));

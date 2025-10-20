@@ -13,9 +13,9 @@ export const MobileSidebar = () => {
 		<Sheet>
 			<SheetTrigger>
 				<Menu className="text-white "/>
+				<DialogTitle />
 			</SheetTrigger>
 			<SheetContent className="p-0 z-[100]" side="left">
-				<DialogTitle />
 				<Sidebar />
 			</SheetContent>
 		</Sheet>
